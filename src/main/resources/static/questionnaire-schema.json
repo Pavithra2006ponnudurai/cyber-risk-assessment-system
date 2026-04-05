@@ -1,0 +1,445 @@
+{
+  "version": "1.0",
+  "totalMaxScore": 100,
+  "sections": [
+    {
+      "id": "org_details",
+      "title": "Organization Details",
+      "icon": "building",
+      "description": "Basic information about your organization and IT infrastructure.",
+      "weight": 0,
+      "questions": [
+        {
+          "id": "company_name",
+          "text": "Company Name",
+          "type": "text",
+          "required": true,
+          "riskWeight": 0,
+          "placeholder": "Enter your company name"
+        },
+        {
+          "id": "industry_type",
+          "text": "Industry Type",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 0,
+          "options": [
+            { "value": "FINANCE", "label": "Finance & Banking" },
+            { "value": "HEALTHCARE", "label": "Healthcare" },
+            { "value": "TECHNOLOGY", "label": "Technology" },
+            { "value": "RETAIL", "label": "Retail & E-Commerce" },
+            { "value": "GOVERNMENT", "label": "Government" },
+            { "value": "EDUCATION", "label": "Education" },
+            { "value": "MANUFACTURING", "label": "Manufacturing" },
+            { "value": "OTHER", "label": "Other" }
+          ]
+        },
+        {
+          "id": "employee_count",
+          "text": "Number of Employees",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 3,
+          "options": [
+            { "value": "SMALL", "label": "Small (1–50)", "score": 0 },
+            { "value": "MEDIUM", "label": "Medium (51–500)", "score": 1 },
+            { "value": "LARGE", "label": "Large (500+)", "score": 3 }
+          ]
+        },
+        {
+          "id": "it_infrastructure",
+          "text": "IT Infrastructure Type",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 2,
+          "options": [
+            { "value": "CLOUD", "label": "Cloud", "score": 1 },
+            { "value": "ON_PREM", "label": "On-Premises", "score": 2 },
+            { "value": "HYBRID", "label": "Hybrid", "score": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security_controls",
+      "title": "Security Controls",
+      "icon": "shield",
+      "description": "Evaluate the core security measures protecting your systems.",
+      "weight": 25,
+      "questions": [
+        {
+          "id": "has_firewall",
+          "text": "Do you use a firewall?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 5,
+          "noScore": 5,
+          "recommendation": "Deploy a network firewall to protect against external threats and unauthorized access."
+        },
+        {
+          "id": "has_antivirus",
+          "text": "Is antivirus/EDR installed on all systems?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Install enterprise-grade antivirus/EDR solution across all endpoints."
+        },
+        {
+          "id": "has_mfa",
+          "text": "Do you use Multi-Factor Authentication (MFA)?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 6,
+          "noScore": 6,
+          "recommendation": "Enable MFA immediately — it prevents over 99% of account compromise attacks."
+        },
+        {
+          "id": "has_encryption",
+          "text": "Is sensitive data encrypted at rest and in transit?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 5,
+          "noScore": 5,
+          "recommendation": "Implement end-to-end encryption for all sensitive data storage and transmission."
+        },
+        {
+          "id": "strong_passwords",
+          "text": "Do you enforce strong password policies?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Enforce password complexity, minimum length, and rotation policies."
+        },
+        {
+          "id": "has_rbac",
+          "text": "Are access controls role-based (RBAC)?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement Role-Based Access Control to enforce least-privilege principles."
+        },
+        {
+          "id": "network_monitoring",
+          "text": "Is network traffic monitored continuously?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Deploy network monitoring tools to detect anomalous traffic patterns."
+        }
+      ]
+    },
+    {
+      "id": "access_identity",
+      "title": "Access & Identity Management",
+      "icon": "key",
+      "description": "Assess how user identities and access privileges are managed.",
+      "weight": 10,
+      "questions": [
+        {
+          "id": "inactive_accounts_removed",
+          "text": "Are inactive accounts removed or disabled regularly?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement automated account lifecycle management to disable inactive accounts."
+        },
+        {
+          "id": "admin_activities_logged",
+          "text": "Are all admin activities logged and audited?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Enable comprehensive admin activity logging with tamper-proof audit trails."
+        },
+        {
+          "id": "privilege_escalation_monitored",
+          "text": "Is privilege escalation monitored and alerted?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement PAM (Privileged Access Management) to monitor and control privilege escalation."
+        }
+      ]
+    },
+    {
+      "id": "patch_management",
+      "title": "Patch & Update Management",
+      "icon": "refresh",
+      "description": "Evaluate how your organization manages system updates and security patches.",
+      "weight": 10,
+      "questions": [
+        {
+          "id": "update_frequency",
+          "text": "How often are systems and software updated?",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 5,
+          "options": [
+            { "value": "DAILY", "label": "Daily", "score": 0 },
+            { "value": "WEEKLY", "label": "Weekly", "score": 1 },
+            { "value": "MONTHLY", "label": "Monthly", "score": 3 },
+            { "value": "RARELY", "label": "Rarely / Ad-hoc", "score": 5 }
+          ],
+          "recommendation": "Establish a regular patch management schedule — outdated systems are a primary attack vector."
+        },
+        {
+          "id": "patches_applied_immediately",
+          "text": "Are critical security patches applied immediately upon release?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement an emergency patch process for critical CVEs with SLA under 24 hours."
+        },
+        {
+          "id": "automated_updates",
+          "text": "Is there an automated patch/update management system?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Deploy automated patch management tools (e.g., WSUS, Ansible, Intune) to reduce manual overhead."
+        }
+      ]
+    },
+    {
+      "id": "incident_history",
+      "title": "Incident History",
+      "icon": "alert",
+      "description": "Review past security incidents and your organization's response capabilities.",
+      "weight": 15,
+      "questions": [
+        {
+          "id": "had_breaches",
+          "text": "Has your organization experienced security breaches or data leaks?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 8,
+          "yesScore": 8,
+          "recommendation": "Conduct a thorough post-incident review and implement a corrective action plan."
+        },
+        {
+          "id": "incident_count",
+          "text": "Number of security incidents in the past 12 months",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 6,
+          "options": [
+            { "value": "NONE", "label": "0 — None", "score": 0 },
+            { "value": "FEW", "label": "1–3 incidents", "score": 3 },
+            { "value": "MANY", "label": "4 or more incidents", "score": 6 }
+          ]
+        },
+        {
+          "id": "has_incident_response_plan",
+          "text": "Do you have a documented Incident Response Plan (IRP)?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 5,
+          "noScore": 5,
+          "recommendation": "Develop and test a formal Incident Response Plan aligned with NIST SP 800-61."
+        },
+        {
+          "id": "incidents_documented",
+          "text": "Are incidents documented, reviewed, and used for improvement?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Establish a lessons-learned process to improve security posture after each incident."
+        }
+      ]
+    },
+    {
+      "id": "data_sensitivity",
+      "title": "Data Sensitivity & Protection",
+      "icon": "database",
+      "description": "Assess how sensitive data is classified, stored, and protected.",
+      "weight": 15,
+      "questions": [
+        {
+          "id": "data_classification",
+          "text": "What is the highest classification of data your organization handles?",
+          "type": "dropdown",
+          "required": true,
+          "riskWeight": 8,
+          "options": [
+            { "value": "PUBLIC", "label": "Public", "score": 0 },
+            { "value": "INTERNAL", "label": "Internal Use Only", "score": 2 },
+            { "value": "CONFIDENTIAL", "label": "Confidential", "score": 5 },
+            { "value": "HIGHLY_SENSITIVE", "label": "Highly Sensitive / PII / PHI", "score": 8 }
+          ]
+        },
+        {
+          "id": "regular_backups",
+          "text": "Is data backed up regularly and tested for restoration?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement automated daily backups with regular restoration testing (3-2-1 backup rule)."
+        },
+        {
+          "id": "backups_encrypted",
+          "text": "Are backups encrypted and stored securely offsite?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Encrypt all backups and store copies in geographically separate, secure locations."
+        },
+        {
+          "id": "data_retention_policy",
+          "text": "Do you have a formal data retention and disposal policy?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 2,
+          "noScore": 2,
+          "recommendation": "Define and enforce data retention schedules with secure disposal procedures."
+        }
+      ]
+    },
+    {
+      "id": "compliance_governance",
+      "title": "Compliance & Governance",
+      "icon": "clipboard",
+      "description": "Evaluate adherence to regulatory standards and internal governance practices.",
+      "weight": 10,
+      "questions": [
+        {
+          "id": "compliance_standards",
+          "text": "Which compliance standards does your organization follow?",
+          "type": "multiselect",
+          "required": true,
+          "riskWeight": 6,
+          "options": [
+            { "value": "ISO27001", "label": "ISO 27001" },
+            { "value": "NIST", "label": "NIST Cybersecurity Framework" },
+            { "value": "GDPR", "label": "GDPR" },
+            { "value": "SOC2", "label": "SOC 2" },
+            { "value": "HIPAA", "label": "HIPAA" },
+            { "value": "PCI_DSS", "label": "PCI-DSS" },
+            { "value": "NONE", "label": "None" }
+          ],
+          "noneScore": 6,
+          "recommendation": "Adopt a recognized security framework (ISO 27001 or NIST CSF) to structure your security program."
+        },
+        {
+          "id": "regular_audits",
+          "text": "Are internal or external security audits conducted regularly?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Schedule annual external audits and quarterly internal reviews."
+        },
+        {
+          "id": "security_training",
+          "text": "Do employees receive regular security awareness training?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement mandatory annual security awareness training with phishing simulations."
+        }
+      ]
+    },
+    {
+      "id": "network_infrastructure",
+      "title": "Network & Infrastructure",
+      "icon": "network",
+      "description": "Review the security architecture of your network and infrastructure.",
+      "weight": 10,
+      "questions": [
+        {
+          "id": "network_segmentation",
+          "text": "Is network segmentation (VLANs/DMZ) implemented?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Implement network segmentation to contain breaches and limit lateral movement."
+        },
+        {
+          "id": "ids_ips",
+          "text": "Are Intrusion Detection/Prevention Systems (IDS/IPS) deployed?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Deploy IDS/IPS to detect and block malicious network activity in real-time."
+        },
+        {
+          "id": "open_ports_audited",
+          "text": "Are open ports and services regularly audited and minimized?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Conduct regular port scans and close all unnecessary open ports and services."
+        },
+        {
+          "id": "vpn_remote_access",
+          "text": "Is VPN or Zero Trust used for all remote access?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 4,
+          "noScore": 4,
+          "recommendation": "Enforce VPN or Zero Trust Network Access (ZTNA) for all remote connections."
+        }
+      ]
+    },
+    {
+      "id": "advanced_security",
+      "title": "Advanced Security Practices",
+      "icon": "radar",
+      "description": "Assess proactive and advanced security capabilities.",
+      "weight": 5,
+      "questions": [
+        {
+          "id": "vulnerability_scanning",
+          "text": "Do you perform regular vulnerability scanning?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Schedule automated vulnerability scans weekly and remediate critical findings within 72 hours."
+        },
+        {
+          "id": "penetration_testing",
+          "text": "Are penetration tests conducted at least annually?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Engage a qualified third-party for annual penetration testing to identify exploitable weaknesses."
+        },
+        {
+          "id": "realtime_log_monitoring",
+          "text": "Are security logs monitored in real-time?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 3,
+          "noScore": 3,
+          "recommendation": "Implement real-time log monitoring with automated alerting for suspicious events."
+        },
+        {
+          "id": "siem_tools",
+          "text": "Do you use SIEM (Security Information and Event Management) tools?",
+          "type": "yesno",
+          "required": true,
+          "riskWeight": 2,
+          "noScore": 2,
+          "recommendation": "Deploy a SIEM solution (e.g., Splunk, Microsoft Sentinel) for centralized threat detection."
+        }
+      ]
+    }
+  ]
+}

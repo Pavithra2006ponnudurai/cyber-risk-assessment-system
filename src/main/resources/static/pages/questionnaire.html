@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Questionnaire — AuditPro</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/questionnaire.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text"><h2>AuditPro</h2><span>Management System</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigation</div>
+      <button class="nav-item" onclick="window.location.href='/pages/dashboard.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </button>
+      <button class="nav-item active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        Questionnaire
+      </button>
+      <button class="nav-item" onclick="showHistory()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        My Responses
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-details">
+          <div class="name" id="sidebar-username">User</div>
+          <div class="role" id="sidebar-role">CLIENT</div>
+        </div>
+      </div>
+      <button class="nav-item" onclick="Auth.logout()" style="color:var(--risk-high)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- ===== QUESTIONNAIRE VIEW ===== -->
+    <div id="view-questionnaire">
+      <div class="page-header">
+        <h1>Security Audit Questionnaire</h1>
+        <p>Complete all sections to receive your comprehensive risk assessment and recommendations</p>
+      </div>
+      <div class="page-content">
+
+        <!-- Progress Bar -->
+        <div class="q-progress-wrap">
+          <div class="q-progress-header">
+            <span id="q-section-label">Section 1 of 9</span>
+            <span id="q-progress-pct">0% Complete</span>
+          </div>
+          <div class="q-progress-track">
+            <div class="q-progress-fill" id="q-progress-fill"></div>
+          </div>
+          <div class="q-step-dots" id="q-step-dots"></div>
+        </div>
+
+        <!-- Section Cards -->
+        <div id="q-sections-container"></div>
+
+        <!-- Navigation -->
+        <div class="q-nav-bar">
+          <button class="btn btn-secondary" id="q-btn-prev" onclick="qPrev()" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Previous
+          </button>
+          <div style="flex:1"></div>
+          <button class="btn btn-primary" id="q-btn-next" onclick="qNext()" style="max-width:180px">
+            Next Section
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== RESULTS VIEW ===== -->
+    <div id="view-results" style="display:none">
+      <div class="page-header">
+        <h1 id="result-company-title">Assessment Results</h1>
+        <p>Your comprehensive security risk assessment is complete</p>
+      </div>
+      <div class="page-content">
+
+        <!-- Top Stats -->
+        <div class="stats-grid" style="margin-bottom:24px">
+          <div class="stat-card" style="align-items:center">
+            <div class="stat-label">Overall Risk Score</div>
+            <div class="stat-value" id="res-score" style="font-size:3rem">—</div>
+            <div id="res-level-badge"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Highest Risk Area</div>
+            <div class="stat-value" id="res-worst-section" style="font-size:1.1rem;line-height:1.3">—</div>
+            <div class="stat-sub" id="res-worst-pct"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Controls Implemented</div>
+            <div class="stat-value" id="res-controls-ok" style="color:var(--risk-low)">—</div>
+            <div class="stat-sub">of key security controls</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Recommendations</div>
+            <div class="stat-value" id="res-rec-count">—</div>
+            <div class="stat-sub">action items identified</div>
+          </div>
+        </div>
+
+        <!-- Risk Meter + Section Radar -->
+        <div class="charts-grid" style="margin-bottom:24px">
+          <div class="chart-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div class="card-title" style="align-self:flex-start">Overall Risk Meter</div>
+            <div id="result-risk-meter"></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-title">Section Risk Breakdown</div>
+            <canvas id="section-bar-chart" style="max-height:240px"></canvas>
+          </div>
+        </div>
+
+        <!-- Section Score Cards -->
+        <div class="card-title" style="margin-bottom:12px">Section-by-Section Analysis</div>
+        <div class="section-scores-grid" id="section-scores-grid" style="margin-bottom:24px"></div>
+
+        <!-- Recommendations -->
+        <div class="result-panel">
+          <div class="result-header">
+            <h2>Recommendations & Action Plan</h2>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm" id="download-pdf-btn" onclick="downloadQPdf()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download PDF
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="resetQuestionnaire()">New Assessment</button>
+            </div>
+          </div>
+          <div class="result-body">
+            <div class="rec-filter-bar" id="rec-filter-bar">
+              <button class="filter-btn active" onclick="filterRecs('ALL', this)">All</button>
+              <button class="filter-btn" onclick="filterRecs('CRITICAL', this)">Critical</button>
+              <button class="filter-btn" onclick="filterRecs('HIGH', this)">High</button>
+              <button class="filter-btn" onclick="filterRecs('MEDIUM', this)">Medium</button>
+              <button class="filter-btn" onclick="filterRecs('LOW', this)">Low</button>
+            </div>
+            <ul class="recommendations-list" id="q-recommendations-list"></ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== HISTORY VIEW ===== -->
+    <div id="view-history" style="display:none">
+      <div class="page-header">
+        <h1>My Questionnaire Responses</h1>
+        <p>View and revisit your previous security assessments</p>
+      </div>
+      <div class="page-content">
+        <div style="margin-bottom:16px">
+          <button class="btn btn-secondary btn-sm" onclick="showQuestionnaire()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            New Assessment
+          </button>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Assessment History</h3></div>
+          <div id="history-content">
+            <div class="loading"><div class="spinner"></div> Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/questionnaire.js"></script>
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AuditPro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard-color.css">
+</head>
+<body class="dark-mode">
+
+<div class="app-shell">
+
+  <!-- ═══ SIDEBAR ═══════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">AuditPro</div>
+        <div class="brand-sub">Management System</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Overview</div>
+      <button class="nav-btn active" data-page="pg-home" onclick="navigate('pg-home')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+
+      <div class="nav-label">Audits</div>
+      <button class="nav-btn" data-page="pg-audit" onclick="navigate('pg-audit')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        New Audit
+      </button>
+      <button class="nav-btn" data-page="pg-history" onclick="navigate('pg-history')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        My Audits
+      </button>
+
+
+      <div class="nav-label admin-only" style="display:none">Admin</div>
+      <button class="nav-btn admin-only" data-page="pg-admin" onclick="navigate('pg-admin')" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Admin Panel
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-av" id="user-av">U</div>
+        <div>
+          <div class="user-name" id="sb-username">User</div>
+          <div class="user-role" id="sb-role">CLIENT</div>
+        </div>
+      </div>
+      <button class="nav-btn logout-btn" onclick="Auth.logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ══════════════════════════════════════════════════════════ -->
+  <main class="main-area">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
+        <div class="topbar-user">
+          <div class="user-av sm" id="top-av">U</div>
+          <span id="top-username">User</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── HOME PAGE ──────────────────────────────────────────────── -->
+    <div id="pg-home" class="page active">
+      <div class="page-body">
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi-card gradient-blue">
+            <div class="kpi-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="kpi-value" id="kpi-total">—</div>
+            <div class="kpi-label">Total Audits</div>
+          </div>
+          <div class="kpi-card gradient-purple">
+            <div class="kpi-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="kpi-value" id="kpi-avg">—</div>
+            <div class="kpi-label">Avg Risk Score</div>
+          </div>
+          <div class="kpi-card gradient-red">
+            <div class="kpi-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="kpi-value" id="kpi-critical">—</div>
+            <div class="kpi-label">Critical Risks</div>
+          </div>
+          <div class="kpi-card gradient-green">
+            <div class="kpi-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div class="kpi-value" id="kpi-low">—</div>
+            <div class="kpi-label">Low Risk</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Risk Distribution</span>
+              <span class="chart-badge">Live</span>
+            </div>
+            <canvas id="home-donut" style="max-height:220px"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Risk by Level</span></div>
+            <canvas id="home-bar" style="max-height:220px"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Recent Audits</span></div>
+            <div id="recent-list" style="overflow-y:auto;max-height:220px"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ─── NEW AUDIT PAGE ─────────────────────────────────────────── -->
+    <div id="pg-audit" class="page">
+      <div class="page-body">
+        <div id="audit-form-wrap">
+          <form id="audit-form" class="audit-form-card">
+            <div class="form-card-header">
+              <h2>Security Audit Assessment</h2>
+              <p>Answer all sections to generate a comprehensive risk score, compliance status and smart recommendations</p>
+            </div>
+
+            <!-- ── SECTION 1: Organisation ─────────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">1</span> Organisation Details</div>
+              <div class="form-grid-2">
+                <div class="fg">
+                  <label>Company Name</label>
+                  <input type="text" id="f-company" placeholder="e.g. Acme Corporation" required>
+                </div>
+                <div class="fg">
+                  <label>Audit Type</label>
+                  <select id="f-type" required>
+                    <option value="">Select type...</option>
+                    <option value="FINANCIAL">Financial</option>
+                    <option value="SECURITY">Security</option>
+                    <option value="COMPLIANCE">Compliance</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Industry</label>
+                  <select id="f-industry" required>
+                    <option value="">Select industry...</option>
+                    <option value="FINANCE">Finance &amp; Banking</option>
+                    <option value="HEALTHCARE">Healthcare</option>
+                    <option value="TECHNOLOGY">Technology</option>
+                    <option value="RETAIL">Retail &amp; E-Commerce</option>
+                    <option value="GOVERNMENT">Government</option>
+                    <option value="EDUCATION">Education</option>
+                    <option value="MANUFACTURING">Manufacturing</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Number of Employees</label>
+                  <select id="f-employees" required>
+                    <option value="">Select size...</option>
+                    <option value="1">Small (1–50)</option>
+                    <option value="100">Medium (51–500)</option>
+                    <option value="1000">Large (500+)</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>IT Infrastructure</label>
+                  <select id="f-infra" required>
+                    <option value="">Select...</option>
+                    <option value="CLOUD">Cloud</option>
+                    <option value="ON_PREM">On-Premises</option>
+                    <option value="HYBRID">Hybrid</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Data Sensitivity</label>
+                  <select id="f-sensitivity" required>
+                    <option value="">Select...</option>
+                    <option value="LOW">Low — Public data</option>
+                    <option value="MEDIUM">Medium — Internal data</option>
+                    <option value="HIGH">High — Confidential</option>
+                    <option value="CRITICAL">Critical — PII / PHI / Financial</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── SECTION 2: Security Controls ───────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">2</span> Core Security Controls</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-firewall"><span class="pill-icon">🔥</span><span>Firewall</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-antivirus"><span class="pill-icon">🛡️</span><span>Antivirus / EDR</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-encryption"><span class="pill-icon">🔐</span><span>Data Encryption</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-mfa"><span class="pill-icon">📱</span><span>MFA Enabled</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-rbac"><span class="pill-icon">👥</span><span>RBAC / Least Privilege</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-strong-pwd"><span class="pill-icon">🔑</span><span>Strong Password Policy</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-net-monitor"><span class="pill-icon">📡</span><span>Network Monitoring</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-ids-ips"><span class="pill-icon">🚨</span><span>IDS / IPS</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 3: Access & Identity ───────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">3</span> Access &amp; Identity Management</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-inactive-acc"><span class="pill-icon">🗑️</span><span>Inactive Accounts Removed</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-admin-log"><span class="pill-icon">📋</span><span>Admin Activities Logged</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-priv-esc"><span class="pill-icon">⚠️</span><span>Privilege Escalation Monitored</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-sso"><span class="pill-icon">🔗</span><span>SSO Implemented</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-pwd-reuse"><span class="pill-icon">🚫</span><span>Password Reuse Prevented</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-acc-lockout"><span class="pill-icon">🔒</span><span>Account Lockout Policy</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 4: Patch & Updates ─────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">4</span> Patch &amp; Update Management</div>
+              <div class="form-grid-2">
+                <div class="fg">
+                  <label>System Update Frequency</label>
+                  <select id="f-frequency" required>
+                    <option value="">Select...</option>
+                    <option value="DAILY">Daily — Automated</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                    <option value="RARELY">Rarely / Ad-hoc</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Compliance Level</label>
+                  <select id="f-compliance" required>
+                    <option value="">Select...</option>
+                    <option value="LOW">Low — No formal framework</option>
+                    <option value="MEDIUM">Medium — Partial compliance</option>
+                    <option value="HIGH">High — Fully certified</option>
+                  </select>
+                </div>
+              </div>
+              <div class="checks-grid" style="margin-top:12px">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-patch-immed"><span class="pill-icon">⚡</span><span>Critical Patches Applied Immediately</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-auto-update"><span class="pill-icon">🤖</span><span>Automated Patch Management</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 5: Incident History ────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">5</span> Incident History &amp; Response</div>
+              <div class="form-grid-2">
+                <div class="fg">
+                  <label>Previous Security Incidents</label>
+                  <select id="f-incidents" required>
+                    <option value="">Select...</option>
+                    <option value="false">No — No known incidents</option>
+                    <option value="true">Yes — Incidents occurred</option>
+                  </select>
+                </div>
+                <div class="fg">
+                  <label>Incidents in Past 12 Months</label>
+                  <select id="f-inc-count" required>
+                    <option value="">Select...</option>
+                    <option value="NONE">0 — None</option>
+                    <option value="FEW">1–3 incidents</option>
+                    <option value="MANY">4 or more</option>
+                  </select>
+                </div>
+              </div>
+              <div class="checks-grid" style="margin-top:12px">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-irp"><span class="pill-icon">📄</span><span>Incident Response Plan Exists</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-inc-doc"><span class="pill-icon">📝</span><span>Incidents Documented &amp; Reviewed</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-drp"><span class="pill-icon">♻️</span><span>Disaster Recovery Plan Tested</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 6: Data Protection ─────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">6</span> Data Protection &amp; Backup</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-backups"><span class="pill-icon">💾</span><span>Regular Backups</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-backup-enc"><span class="pill-icon">🔒</span><span>Backups Encrypted</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-offsite"><span class="pill-icon">🌍</span><span>Offsite Backup Storage</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-retention"><span class="pill-icon">📅</span><span>Data Retention Policy</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-dlp"><span class="pill-icon">🛑</span><span>DLP Tools Deployed</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-data-class"><span class="pill-icon">🏷️</span><span>Data Classification Policy</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 7: Network Security ────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">7</span> Network &amp; Infrastructure Security</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-net-seg"><span class="pill-icon">🔀</span><span>Network Segmentation</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-vpn"><span class="pill-icon">🌐</span><span>VPN / Zero Trust</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-ports"><span class="pill-icon">🚪</span><span>Open Ports Audited</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-tls"><span class="pill-icon">🔏</span><span>TLS / HTTPS Enforced</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-wifi-sec"><span class="pill-icon">📶</span><span>Secure Wi-Fi (WPA3)</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-honeypot"><span class="pill-icon">🍯</span><span>Honeypots / Deception</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 8: Monitoring & Logging ────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">8</span> Monitoring, Logging &amp; Detection</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-siem"><span class="pill-icon">🖥️</span><span>SIEM Tools</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-rt-log"><span class="pill-icon">⏱️</span><span>Real-time Log Monitoring</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-log-central"><span class="pill-icon">📦</span><span>Centralised Log Collection</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-log-integrity"><span class="pill-icon">✅</span><span>Log Integrity Protected</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-alerts"><span class="pill-icon">🔔</span><span>Automated Alerts Configured</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-anomaly"><span class="pill-icon">🤖</span><span>Anomaly Detection (AI/ML)</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 9: Vulnerability & Pen Testing ─────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">9</span> Vulnerability Management &amp; Testing</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-vuln-scan"><span class="pill-icon">🔍</span><span>Vulnerability Scanning</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-pen-test"><span class="pill-icon">🧪</span><span>Penetration Testing (Annual)</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-red-team"><span class="pill-icon">🔴</span><span>Red Team Exercises</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-owasp"><span class="pill-icon">🌐</span><span>OWASP Top 10 Testing</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-vuln-sla"><span class="pill-icon">⏰</span><span>Vulnerabilities Patched within SLA</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 10: Compliance ──────────────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">10</span> Compliance &amp; Governance</div>
+              <div class="form-grid-2">
+                <div class="fg">
+                  <label>Compliance Standards Followed</label>
+                  <select id="f-std" required>
+                    <option value="">Select...</option>
+                    <option value="ISO27001">ISO 27001</option>
+                    <option value="NIST">NIST CSF</option>
+                    <option value="GDPR">GDPR</option>
+                    <option value="SOC2">SOC 2</option>
+                    <option value="HIPAA">HIPAA</option>
+                    <option value="PCI_DSS">PCI-DSS</option>
+                    <option value="NONE">None</option>
+                  </select>
+                </div>
+              </div>
+              <div class="checks-grid" style="margin-top:12px">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-sec-policy"><span class="pill-icon">📜</span><span>Security Policy Documented</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-reg-audit"><span class="pill-icon">🔎</span><span>Regular Audits Conducted</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-training"><span class="pill-icon">🎓</span><span>Security Awareness Training</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-phishing"><span class="pill-icon">🎣</span><span>Phishing Simulations Run</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-vendor-audit"><span class="pill-icon">🤝</span><span>Third-party Vendors Audited</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-privacy-policy"><span class="pill-icon">📋</span><span>Privacy Policy Documented</span></label>
+              </div>
+            </div>
+
+            <!-- ── SECTION 11: Physical Security ──────────────────── -->
+            <div class="audit-section">
+              <div class="audit-section-title"><span class="sec-num">11</span> Physical &amp; Endpoint Security</div>
+              <div class="checks-grid">
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-server-access"><span class="pill-icon">🏢</span><span>Server Room Access Restricted</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-cctv"><span class="pill-icon">📷</span><span>CCTV Installed</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-asset-track"><span class="pill-icon">📦</span><span>Hardware Assets Tracked</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-disk-enc"><span class="pill-icon">💿</span><span>Full Disk Encryption</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-usb-block"><span class="pill-icon">🔌</span><span>USB / Removable Media Blocked</span></label>
+                <label class="check-pill" onclick="togglePill(this)"><input type="checkbox" id="f-mdm"><span class="pill-icon">📲</span><span>MDM for Mobile Devices</span></label>
+              </div>
+            </div>
+
+            <div id="audit-alert" style="margin:0 28px"></div>
+            <button type="submit" class="btn-submit" id="audit-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Analyse &amp; Generate Full Report
+            </button>
+          </form>
+        </div>
+
+        <!-- RESULT PANEL -->
+        <div id="audit-result-wrap" style="display:none">
+          <div class="result-topbar">
+            <h2 id="result-title">Audit Results</h2>
+            <div style="display:flex;gap:8px">
+              <button class="btn-outline" onclick="downloadAuditPdf()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+              </button>
+              <button class="btn-outline" onclick="resetAuditForm()">New Audit</button>
+            </div>
+          </div>
+
+          <div class="result-grid-top">
+            <!-- Risk Meter -->
+            <div class="result-card">
+              <div class="rc-title">Overall Risk Score</div>
+              <div id="audit-risk-meter"></div>
+              <div style="text-align:center;margin-top:8px" id="audit-risk-badge"></div>
+            </div>
+            <!-- Controls Status -->
+            <div class="result-card">
+              <div class="rc-title">Security Controls</div>
+              <div class="controls-status" id="controls-status"></div>
+            </div>
+            <!-- Bar Chart -->
+            <div class="result-card">
+              <div class="rc-title">Controls Analysis</div>
+              <canvas id="audit-bar-chart" style="max-height:180px"></canvas>
+            </div>
+          </div>
+
+          <!-- Recommendations -->
+          <div class="recs-card">
+            <div class="recs-header">
+              <span class="rc-title" style="margin:0">Smart Recommendations</span>
+              <div class="rec-filters" id="rec-filters">
+                <button class="rf active" onclick="filterRecs('ALL',this)">All</button>
+                <button class="rf critical" onclick="filterRecs('CRITICAL',this)">Critical</button>
+                <button class="rf high" onclick="filterRecs('HIGH',this)">High</button>
+                <button class="rf medium" onclick="filterRecs('MEDIUM',this)">Medium</button>
+                <button class="rf low" onclick="filterRecs('LOW',this)">Low</button>
+              </div>
+            </div>
+            <ul class="recs-list" id="recs-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── MY AUDITS PAGE ─────────────────────────────────────────── -->
+    <div id="pg-history" class="page">
+      <div class="page-body">
+        <div class="table-card">
+          <div class="table-card-header">
+            <span>Audit History</span>
+            <button class="btn-outline sm" onclick="loadHistory()">↻ Refresh</button>
+          </div>
+          <div id="history-body">
+            <div class="loading-state"><div class="spin"></div> Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── ADMIN PAGE ─────────────────────────────────────────────── -->
+    <div id="pg-admin" class="page">
+      <div class="page-body">
+        <div class="kpi-grid" style="margin-bottom:24px">
+          <div class="kpi-card gradient-blue">
+            <div class="kpi-value" id="adm-total">—</div>
+            <div class="kpi-label">Total Audits</div>
+          </div>
+          <div class="kpi-card gradient-purple">
+            <div class="kpi-value" id="adm-avg">—</div>
+            <div class="kpi-label">Avg Risk Score</div>
+          </div>
+          <div class="kpi-card gradient-red">
+            <div class="kpi-value" id="adm-critical">—</div>
+            <div class="kpi-label">Critical</div>
+          </div>
+          <div class="kpi-card gradient-orange">
+            <div class="kpi-value" id="adm-high">—</div>
+            <div class="kpi-label">High Risk</div>
+          </div>
+        </div>
+
+        <div class="charts-row" style="margin-bottom:24px">
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Risk Distribution</span></div>
+            <canvas id="adm-donut" style="max-height:220px"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Risk Levels</span></div>
+            <canvas id="adm-bar" style="max-height:220px"></canvas>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-card-header">
+            <span>All Audits</span>
+            <div style="display:flex;gap:6px">
+              <button class="rf active" onclick="adminFilter(null,this)">All</button>
+              <button class="rf low" onclick="adminFilter('LOW',this)">Low</button>
+              <button class="rf medium" onclick="adminFilter('MEDIUM',this)">Medium</button>
+              <button class="rf high" onclick="adminFilter('HIGH',this)">High</button>
+              <button class="rf critical" onclick="adminFilter('CRITICAL',this)">Critical</button>
+            </div>
+          </div>
+          <div id="admin-table-body">
+            <div class="loading-state"><div class="spin"></div> Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

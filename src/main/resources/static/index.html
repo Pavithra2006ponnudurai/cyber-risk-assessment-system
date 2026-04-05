@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuditPro — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;min-height:100vh;background:#0f172a;display:flex;align-items:center;justify-content:center;padding:20px}
+    .bg{position:fixed;inset:0;overflow:hidden;z-index:0}
+    .bg-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15}
+    .blob1{width:600px;height:600px;background:radial-gradient(circle,#6366f1,#8b5cf6);top:-200px;left:-200px}
+    .blob2{width:500px;height:500px;background:radial-gradient(circle,#06b6d4,#3b82f6);bottom:-150px;right:-150px}
+    .blob3{width:300px;height:300px;background:radial-gradient(circle,#f59e0b,#ef4444);top:50%;left:50%;transform:translate(-50%,-50%)}
+    .card{position:relative;z-index:1;background:rgba(15,23,42,.85);backdrop-filter:blur(20px);border:1px solid rgba(148,163,184,.1);border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 25px 50px rgba(0,0,0,.5)}
+    .logo{text-align:center;margin-bottom:32px}
+    .logo-icon{width:56px;height:56px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 8px 24px rgba(99,102,241,.4)}
+    .logo-icon svg{color:#fff}
+    .logo h1{font-size:1.5rem;font-weight:800;color:#f1f5f9;letter-spacing:-.03em}
+    .logo p{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+    .subtitle{font-size:.9rem;font-weight:500;color:#94a3b8;margin-bottom:24px}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:.75rem;font-weight:600;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+    .form-group input{width:100%;background:rgba(30,41,59,.8);border:1px solid rgba(148,163,184,.15);border-radius:10px;padding:11px 14px;color:#f1f5f9;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
+    .form-group input:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+    .btn{width:100%;padding:13px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+    .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 4px 15px rgba(99,102,241,.4)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(99,102,241,.5)}
+    .btn-primary:disabled{opacity:.6;transform:none;cursor:not-allowed}
+    .alert{padding:12px 14px;border-radius:10px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+    .alert-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+    .divider{height:1px;background:rgba(148,163,184,.1);margin:20px 0}
+    .link-row{text-align:center;font-size:.85rem;color:#64748b}
+    .link-row a{color:#818cf8;text-decoration:none;font-weight:500}
+    .link-row a:hover{color:#a5b4fc}
+    .demo-box{background:rgba(30,41,59,.6);border:1px solid rgba(148,163,184,.1);border-radius:10px;padding:14px;font-size:.75rem;color:#64748b;line-height:2}
+    .demo-box strong{color:#94a3b8;display:block;margin-bottom:4px}
+    code{background:rgba(99,102,241,.15);color:#a5b4fc;padding:1px 6px;border-radius:4px;font-size:.8rem}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="bg">
+    <div class="bg-blob blob1"></div>
+    <div class="bg-blob blob2"></div>
+    <div class="bg-blob blob3"></div>
+  </div>
+
+  <div class="card">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h1>AuditPro</h1>
+      <p>Intelligent Audit Management</p>
+    </div>
+
+    <p class="subtitle">Sign in to your account</p>
+    <div id="login-alert"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-btn">Sign In</button>
+    </form>
+
+    <div class="divider"></div>
+
+    <div class="demo-box">
+      <strong>Demo Credentials</strong>
+      Admin: <code>admin</code> / <code>admin123</code><br>
+      Auditor: <code>auditor1</code> / <code>audit123</code><br>
+      Client: <code>client1</code> / <code>client123</code>
+    </div>
+
+    <div class="divider"></div>
+    <div class="link-row">No account? <a href="/pages/register.html">Create one</a></div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    if (Auth.isLoggedIn()) window.location.href = '/pages/dashboard.html';
+
+    document.getElementById('login-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      UI.clearAlert('login-alert');
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Signing in...';
+      try {
+        const data = await API.post('/auth/login', {
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value
+        });
+        Auth.save(data);
+        window.location.href = '/pages/dashboard.html';
+      } catch (err) {
+        UI.alert('login-alert', err.message);
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+      }
+    });
+  </script>
+</body>
+</html>
