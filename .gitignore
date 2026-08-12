@@ -1,8 +1,21 @@
+# ── Build output ─────────────────────────────────────────────
 target/
 *.class
 *.jar
 *.war
+
+# ── Logs ─────────────────────────────────────────────────────
 *.log
+app.log
+run.log
+startup.log
+
+# ── Environment / Secrets — NEVER COMMIT ─────────────────────
+.env
+*.env
+!.env.example
+
+# ── IDE files ────────────────────────────────────────────────
 .idea/
 *.iml
 .vscode/
@@ -10,6 +23,8 @@ target/
 .classpath
 .project
 *.DS_Store
-app.log
-run.log
-startup.log
+
+# ── Maven wrapper ────────────────────────────────────────────
+.mvn/
+mvnw
+mvnw.cmd
