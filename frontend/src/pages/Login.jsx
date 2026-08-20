@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import api from '../utils/api'
 import { saveAuth, getToken } from '../utils/auth'
-import { useEffect } from 'react'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -10,7 +9,11 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => { if (getToken()) navigate('/app') }, [])
+  useEffect(() => {
+    if (getToken()) {
+      api.get('/audits').then(() => navigate('/app')).catch(() => {})
+    }
+  }, [])
 
   async function handleSubmit(e) {
     e.preventDefault()

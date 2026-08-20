@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { Chart, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js'
 import api from '../utils/api'
@@ -20,10 +20,13 @@ const INIT = {
 
 function Pill({ label, icon, field, form, setForm }) {
   return (
-    <label className={`check-pill ${form[field] ? 'on' : ''}`} onClick={() => setForm(f => ({ ...f, [field]: !f[field] }))}>
-      <input type="checkbox" checked={form[field]} onChange={() => {}} />
+    <div
+      className={`check-pill ${form[field] ? 'on' : ''}`}
+      style={{ cursor: 'pointer', userSelect: 'none' }}
+      onClick={() => setForm(f => ({ ...f, [field]: !f[field] }))}
+    >
       <span>{icon}</span><span>{label}</span>
-    </label>
+    </div>
   )
 }
 
@@ -68,7 +71,17 @@ export default function NewAudit() {
   async function handleSubmit(e) {
     e.preventDefault(); setError(''); setLoading(true)
     const empMap = { '1': 25, '100': 150, '1000': 1000 }
-    const payload = { ...form, numberOfEmployees: empMap[form.numberOfEmployees] || 50, previousIncidents: form.previousIncidents === 'true' }
+    const payload = {
+      ...form,
+      numberOfEmployees: empMap[form.numberOfEmployees] || 50,
+      previousIncidents: form.previousIncidents === 'true',
+      auditType:         form.auditType         || null,
+      complianceLevel:   form.complianceLevel   || null,
+      dataSensitivity:   form.dataSensitivity   || null,
+      updateFrequency:   form.updateFrequency   || null,
+      complianceStandards: form.complianceStandards || null,
+      incidentCount:     form.incidentCount     || null,
+    }
     try {
       const { data } = await api.post('/audits', payload)
       setResult(data)

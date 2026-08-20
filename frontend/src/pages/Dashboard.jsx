@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Doughnut, Bar } from 'react-chartjs-2'
 import { Chart, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js'
 import api from '../utils/api'
-import { isAuditor } from '../utils/auth'
+import { isAdmin } from '../utils/auth'
 
 Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
@@ -17,7 +17,7 @@ export default function Dashboard() {
   async function load() {
     try {
       let audits, s
-      if (isAuditor()) {
+      if (isAdmin()) {
         const [a, st] = await Promise.all([api.get('/admin/audits'), api.get('/admin/stats')])
         audits = a.data; s = st.data
       } else {

@@ -22,7 +22,9 @@ public class AuditApplication {
     CommandLineRunner seedData(UserRepository userRepo, AuditRepository auditRepo,
                                PasswordEncoder encoder) {
         return args -> {
-            // Seed users
+            // Only seed if DB is empty
+            if (userRepo.count() > 0) return;
+
             User admin = new User();
             admin.setUsername("admin");
             admin.setEmail("admin@auditpro.com");
@@ -44,7 +46,6 @@ public class AuditApplication {
             client.setRole(User.Role.CLIENT);
             userRepo.save(client);
 
-            // Seed sample audits
             seedAudit(auditRepo, admin, "TechCorp Solutions", AuditType.SECURITY,
                     250, false, true, false, false, true,
                     ComplianceLevel.LOW, DataSensitivity.HIGH, UpdateFrequency.MONTHLY);
